@@ -1,0 +1,13 @@
+{
+    "name": "wings/object-design",
+    "description": "Object Design Code Assignment",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Wings\\ObjectDesign\\": "src/"
+        }
+    },
+    "require": {
+        "webmozart/assert": "^1.10"
+    }
+}
