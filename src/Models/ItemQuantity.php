@@ -5,9 +5,9 @@ namespace App\Models;
 use Webmozart\Assert\Assert;
 
 /**
- * @Class ProductPrice
+ * @Class ItemQuantity
  */
-final class ProductPrice
+final class ItemQuantity
 {
     /**
      * @var int
@@ -19,29 +19,9 @@ final class ProductPrice
      */
     public function __construct(int $value)
     {
-        Assert::greaterThan($value, 0);
+        Assert::greaterThanEq($value, 0);
         $this->value = $value;
     }
-
-    /**
-     * @param DiscountPercentage $discountPercentage
-     * @return ProductPrice
-     */
-    public function withDiscountApplied(DiscountPercentage $discountPercentage): ProductPrice
-    {
-        $discount = (int)round($discountPercentage / 100) * $this->value;
-        return new ProductPrice($this->value - $discount);
-    }
-
-    /**
-     * @param ProductPrice $price
-     * @return ProductPrice
-     */
-    public function withAdding(ProductPrice $price): ProductPrice
-    {
-        return new ProductPrice($this->value + $price->value);
-    }
-
 
     /**
      * @return int
@@ -51,5 +31,19 @@ final class ProductPrice
         return $this->value;
     }
 
+    /**
+     * @return ItemQuantity
+     */
+    public function incremented(): ItemQuantity
+    {
+        return new ItemQuantity($this->value + 1);
+    }
 
+    /**
+     * @return ItemQuantity
+     */
+    public function decremented(): ItemQuantity
+    {
+        return new ItemQuantity($this->value - 1);
+    }
 }

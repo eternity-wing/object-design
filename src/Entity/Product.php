@@ -1,10 +1,23 @@
 <?php
 
+namespace App\Entity;
+
+use App\Event\NewProductEvent;
+use App\Models\ProductPrice;
+use App\Models\ProductTitle;
+use App\Models\DiscountPercentage;
+use App\Models\UUID;
+
 /**
  * @Class Product
+ * TODO: it might be a good Idea to provide a ReadModel for products instead of exposing it's fields.
  */
 final class Product
 {
+    /**
+     * @var UUID
+     */
+    private UUID $id;
     /**
      * @var ProductTitle
      */
@@ -24,16 +37,18 @@ final class Product
     private array $events;
 
     /**
+     * @param UUID $id
      * @param ProductTitle $title
      * @param ProductPrice $price
      * @param DiscountPercentage $discount
      */
-    public function __construct(ProductTitle $title, ProductPrice $price, DiscountPercentage $discount)
+    public function __construct(UUID $id, ProductTitle $title, ProductPrice $price, DiscountPercentage $discount)
     {
+        $this->id = $id;
         $this->title = $title;
         $this->price = $price;
         $this->discount = $discount;
-        $this->events = [$title, $price, $discount];
+        $this->events[] = new NewProductEvent($this);
     }
 
     /**
@@ -43,7 +58,6 @@ final class Product
     public function setTitle(string $title): void
     {
         $this->title = new ProductTitle($title);
-        $this->events[] = $this->title;
     }
 
     /**
@@ -53,7 +67,6 @@ final class Product
     public function setPrice(int $price): void
     {
         $this->price = new ProductPrice($price);
-        $this->events[] = $this->price;
     }
 
     /**
@@ -63,7 +76,6 @@ final class Product
     public function setDiscount(int $discount): void
     {
         $this->discount = new DiscountPercentage($discount);
-        $this->events[] = $this->discount;
     }
 
     /**
@@ -74,4 +86,43 @@ final class Product
         return $this->events;
     }
 
+    /**
+     * @return array
+     */
+    public function clearEvents(): array
+    {
+        return $this->events = [];
+    }
+
+    /**
+     * @return ProductPrice
+     */
+    public function price(): ProductPrice
+    {
+        return $this->price;
+    }
+
+    /**
+     * @return DiscountPercentage
+     */
+    public function discount(): DiscountPercentage
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @return ProductTitle
+     */
+    public function title(): ProductTitle
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return UUID
+     */
+    public function id(): UUID
+    {
+        return $this->id;
+    }
 }

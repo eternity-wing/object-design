@@ -4,10 +4,14 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Wings\\ObjectDesign\\": "src/"
+            "App\\": "src/"
         }
     },
     "require": {
         "webmozart/assert": "^1.10"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
     }
 }

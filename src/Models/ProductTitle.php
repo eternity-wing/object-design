@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 use Webmozart\Assert\Assert;
 
 /**
@@ -24,7 +26,8 @@ final class ProductTitle
     /**
      * @return string
      */
-    public function title(): string{
+    public function title(): string
+    {
         return $this->title;
     }
 

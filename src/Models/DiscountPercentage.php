@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 use Webmozart\Assert\Assert;
 
 /**
@@ -8,6 +10,7 @@ use Webmozart\Assert\Assert;
 final class DiscountPercentage
 {
     private const DEFAULT_PERCENTAGE = 0;
+
     private const MIN_PERCENTAGE = 0;
     private const MAX_PERCENTAGE = 0;
 

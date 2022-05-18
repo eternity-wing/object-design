@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 use Webmozart\Assert\Assert;
 
 /**
@@ -22,10 +24,32 @@ final class ProductPrice
     }
 
     /**
+     * @param DiscountPercentage $discountPercentage
+     * @return ProductPrice
+     */
+    public function withDiscountApplied(DiscountPercentage $discountPercentage): ProductPrice
+    {
+        $discount = (int)round($discountPercentage / 100) * $this->value;
+        return new ProductPrice($this->value - $discount);
+    }
+
+    /**
+     * @param ProductPrice $price
+     * @return ProductPrice
+     */
+    public function withAdding(ProductPrice $price): ProductPrice
+    {
+        return new ProductPrice($this->value + $price->value);
+    }
+
+
+    /**
      * @return int
      */
-    public function value(): int{
+    public function value(): int
+    {
         return $this->value;
     }
+
 
 }

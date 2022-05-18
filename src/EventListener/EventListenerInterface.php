@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Services;
+namespace App\EventListener;
+
+use App\Event\ListenableInterface;
 
 interface EventListenerInterface
 {
     /**
-     * @param $payload
+     * @param ListenableInterface $event
      * @return void
      */
-    public function listen($payload):void;
+    public function listen(ListenableInterface $event):void;
 }
