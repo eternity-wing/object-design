@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Event\NewProductEvent;
-use App\Models\ProductPrice;
+use App\Models\Price;
 use App\Models\ProductTitle;
 use App\Models\DiscountPercentage;
 use App\Models\UUID;
@@ -23,9 +23,9 @@ final class Product
      */
     private ProductTitle $title;
     /**
-     * @var ProductPrice
+     * @var Price
      */
-    private ProductPrice $price;
+    private Price $price;
     /**
      * @var DiscountPercentage
      */
@@ -39,16 +39,29 @@ final class Product
     /**
      * @param UUID $id
      * @param ProductTitle $title
-     * @param ProductPrice $price
+     * @param Price $price
      * @param DiscountPercentage $discount
      */
-    public function __construct(UUID $id, ProductTitle $title, ProductPrice $price, DiscountPercentage $discount)
+    public function __construct(UUID $id, ProductTitle $title, Price $price, DiscountPercentage $discount)
     {
         $this->id = $id;
         $this->title = $title;
         $this->price = $price;
         $this->discount = $discount;
         $this->events[] = new NewProductEvent($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return sprintf("id:%4s title:%4s price:%d discount:%d",
+            $this->id->value(),
+            $this->title->value(),
+            $this->price->value(),
+            $this->discount->percentage()
+        );
     }
 
     /**
@@ -66,7 +79,7 @@ final class Product
      */
     public function setPrice(int $price): void
     {
-        $this->price = new ProductPrice($price);
+        $this->price = new Price($price);
     }
 
     /**
@@ -95,9 +108,9 @@ final class Product
     }
 
     /**
-     * @return ProductPrice
+     * @return Price
      */
-    public function price(): ProductPrice
+    public function price(): Price
     {
         return $this->price;
     }

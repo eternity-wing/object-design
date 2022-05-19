@@ -12,23 +12,23 @@ final class ProductTitle
     /**
      * @var string
      */
-    private string $title;
+    private string $value;
 
     /**
-     * @param string $title
+     * @param string $value
      */
-    public function __construct(string $title)
+    public function __construct(string $value)
     {
-        Assert::notEmpty($title);
-        $this->title = $title;
+        Assert::notEmpty($value);
+        $this->value = $value;
     }
 
     /**
      * @return string
      */
-    public function title(): string
+    public function value(): string
     {
-        return $this->title;
+        return $this->value;
     }
 
 }

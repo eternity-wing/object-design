@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Models\ItemQuantity;
-use App\Models\ProductPrice;
+use App\Models\Price;
 
 /**
  * @Class OrderItem
@@ -46,11 +46,26 @@ final class OrderItem
     }
 
     /**
-     * @return ProductPrice
+     * @return Price
      */
-    public function totalPrice(): ProductPrice
+    public function totalPrice(): Price
     {
-        return new ProductPrice($this->pack->totalPrice()->value() * $this->quantity->value());
+        return new Price($this->pack->totalPrice()->value() * $this->quantity->value());
     }
 
+    /**
+     * @return ProductPack
+     */
+    public function pack(): ProductPack
+    {
+        return $this->pack;
+    }
+
+    /**
+     * @return ItemQuantity
+     */
+    public function quantity(): ItemQuantity
+    {
+        return $this->quantity;
+    }
 }

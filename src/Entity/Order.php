@@ -3,7 +3,8 @@
 namespace App\Entity;
 
 use App\Exception\NotFoundException;
-use App\Models\ProductPrice;
+use App\Models\ItemQuantity;
+use App\Models\Price;
 use App\Models\UUID;
 use Exception;
 
@@ -13,21 +14,10 @@ use Exception;
 final class Order
 {
     /**
-     * @var UUID
-     */
-    private UUID $userId;
-    /**
      * @var OrderItem[]
      */
     private array $items;
 
-    /**
-     * @param UUID $userId
-     */
-    public function __construct(UUID $userId)
-    {
-        $this->userId = $userId;
-    }
 
     /**
      * @param Product $product
@@ -37,7 +27,7 @@ final class Order
     public function addProduct(Product $product): void
     {
         if (!isset($this->items[$product->id()->value()])) {
-            $this->items[$product->id()->value()] = new ProductPack($product->id(), [$product]);
+            $this->items[$product->id()->value()] = new OrderItem(new ProductPack($product->id(), [$product]), new ItemQuantity(0));
         }
         $this->incrementItemQuantity($product->id());
     }
@@ -50,7 +40,7 @@ final class Order
     public function addProductPack(ProductPack $productPack): void
     {
         if (!isset($this->items[$productPack->id()->value()])) {
-            $this->items[$productPack->id()->value()] = $productPack;
+            $this->items[$productPack->id()->value()] = new OrderItem($productPack, new ItemQuantity(0));
         }
         $this->incrementItemQuantity($productPack->id());
     }
@@ -70,7 +60,7 @@ final class Order
      * @param UUID $id
      * @return void
      */
-    public function incrementItemQuantity(UUID $id): void
+    private function incrementItemQuantity(UUID $id): void
     {
         if (!isset($this->items[$id->value()])) {
             throw new NotFoundException();
@@ -82,7 +72,7 @@ final class Order
      * @param UUID $id
      * @return void
      */
-    public function decrementItemQuantity(UUID $id): void
+    private function decrementItemQuantity(UUID $id): void
     {
         if (!isset($this->items[$id->value()])) {
             throw new NotFoundException();
@@ -93,9 +83,10 @@ final class Order
     /**
      * @return int
      */
-    public function totalPrice(): int{
-        $price = new ProductPrice(0);
-        foreach ($this->items as $item){
+    public function totalPrice(): int
+    {
+        $price = new Price(0);
+        foreach ($this->items as $item) {
             $price = $price->withAdding($item->totalPrice());
         }
         return $price->value();
@@ -104,7 +95,8 @@ final class Order
     /**
      * @return OrderItem[]
      */
-    public function items(): array{
+    public function items(): array
+    {
         return $this->items;
     }
 }

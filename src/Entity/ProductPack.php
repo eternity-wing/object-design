@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Models\DiscountPercentage;
-use App\Models\ProductPrice;
+use App\Models\Price;
 use App\Models\UUID;
 use Webmozart\Assert\Assert;
 
@@ -25,7 +25,7 @@ final class ProductPack
     /**
      * @var DiscountPercentage | null
      */
-    private ?DiscountPercentage $discount;
+    private ?DiscountPercentage $discount = null;
 
     /**
      * @param array $products
@@ -39,31 +39,32 @@ final class ProductPack
     }
 
     /**
+     * @param UUID $id
      * @param array $products
      * @param DiscountPercentage $discount
      * @return ProductPack
      */
-    public static function withDiscount(array $products, DiscountPercentage $discount): ProductPack
+    public static function withDiscount(UUID $id, array $products, DiscountPercentage $discount): ProductPack
     {
-        $pack = new ProductPack(UUID::generate(), $products);
+        $pack = new ProductPack($id, $products);
         $pack->discount = $discount;
         return $pack;
     }
 
     /**
-     * @return ProductPrice
+     * @return Price
      */
-    public function totalPrice(): ProductPrice
+    public function totalPrice(): Price
     {
         return $this->discount ? $this->totalPriceByBasketDiscount() : $this->totalPriceByUnitsDiscount();
     }
 
     /**
-     * @return ProductPrice
+     * @return Price
      */
-    private function totalPriceByBasketDiscount(): ProductPrice
+    private function totalPriceByBasketDiscount(): Price
     {
-        $price = new ProductPrice(0);
+        $price = new Price(0);
         foreach ($this->products as $product) {
             $price = $price->withAdding($product->price());
         }
@@ -71,11 +72,11 @@ final class ProductPack
     }
 
     /**
-     * @return ProductPrice
+     * @return Price
      */
-    private function totalPriceByUnitsDiscount(): ProductPrice
+    private function totalPriceByUnitsDiscount(): Price
     {
-        $totalPrice = new ProductPrice(0);
+        $totalPrice = new Price(0);
         foreach ($this->products as $product) {
             $totalPrice = $totalPrice->withAdding($product->price()->withDiscountApplied($product->discount()));
         }
@@ -89,4 +90,21 @@ final class ProductPack
     {
         return $this->id;
     }
+
+    /**
+     * @return DiscountPercentage|null
+     */
+    public function discount(): ?DiscountPercentage
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @return array|Product[]
+     */
+    public function products(): array
+    {
+        return $this->products;
+    }
+
 }

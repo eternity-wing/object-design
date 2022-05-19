@@ -23,6 +23,6 @@ final class NewProductListener implements EventListenerInterface
          * @var Product $product
          */
         $product = $event->payload();
-        echo "NewProductListener: product {$product->title()}";
+        echo "NewProductListener: product $product\n";
     }
 }
